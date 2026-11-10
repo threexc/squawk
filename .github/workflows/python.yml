@@ -52,7 +52,7 @@ jobs:
         uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1
         with:
           target: ${{ matrix.platform.target }}
-          maturin-version: v1.7.1
+          maturin-version: v1.16.0
           working-directory: crates/squawk
           args: --release --out dist
           manylinux: ${{ matrix.platform.manylinux }}
