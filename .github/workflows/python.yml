@@ -33,15 +33,23 @@ jobs:
       matrix:
         platform:
           - runner: ubuntu-latest
-            target: x86_64
+            target: x86_64-unknown-linux-gnu
+            arch: x86_64
             sccache: "false"
             before-script: yum install clang llvm llvm-devel perl-IPC-Cmd -y && python3 -m ensurepip
             manylinux: manylinux_2_28
           - runner: ubuntu-24.04-arm
             target: aarch64-unknown-linux-gnu
+            arch: aarch64
             sccache: "true"
             before-script: yum install clang llvm llvm-devel perl-IPC-Cmd -y && python3 -m ensurepip
             manylinux: manylinux_2_28
+          - runner: ubuntu-24.04-riscv
+            target: riscv64gc-unknown-linux-gnu
+            arch: riscv64
+            sccache: "true"
+            before-script: yum install clang llvm llvm-devel perl -y && python3 -m ensurepip
+            manylinux: manylinux_2_39
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
@@ -50,7 +58,7 @@ jobs:
         uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1
         with:
           target: ${{ matrix.platform.target }}
-          maturin-version: v1.7.1
+          maturin-version: v1.16.0
           working-directory: crates/squawk
           args: --release --out dist
           manylinux: ${{ matrix.platform.manylinux }}
@@ -59,7 +67,7 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: wheels-linux-${{ matrix.platform.target }}
+          name: wheels-linux-${{ matrix.platform.arch }}
           path: crates/squawk/dist
           if-no-files-found: error
 
@@ -99,9 +107,9 @@ jobs:
     strategy:
       matrix:
         platform:
-          - runner: macos-14
+          - runner: macos-15
             target: x86_64
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
