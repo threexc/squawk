@@ -48,7 +48,7 @@ jobs:
             target: riscv64gc-unknown-linux-gnu
             arch: riscv64
             sccache: "true"
-            before-script: yum install clang llvm llvm-devel perl-IPC-Cmd -y && python3 -m ensurepip
+            before-script: yum install clang llvm llvm-devel perl -y && python3 -m ensurepip
             manylinux: manylinux_2_39
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
